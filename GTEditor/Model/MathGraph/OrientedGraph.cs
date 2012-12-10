@@ -34,9 +34,9 @@ namespace GTEditor
 		/// Create new node in this graph and raise corresponding event 
 		/// </summary>
 		/// <returns>Reference to the added node</returns>
-		public override Vertex addVertex()
+		public override Vertex addVertex(Vertex v)
 		{
-			Vertex v = new Vertex(counter++);
+			
 
 			innerVertices.Add(v);
 

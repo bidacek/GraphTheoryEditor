@@ -6,8 +6,12 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid Background="Aquamarine">
-        
-        
-            
+
+        <Button  Command="{Binding deleteAll}" >
+            <TextBlock>ahoj</TextBlock>        
+        </Button>
+
+
+
     </Grid>
 </UserControl>

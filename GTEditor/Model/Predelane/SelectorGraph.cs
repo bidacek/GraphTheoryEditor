@@ -103,7 +103,7 @@ namespace GTEditor.SelectorG
 			throw new NotImplementedException();
 		}
 
-		public IMemento getMemento(Vertex changedObject, ChangeType typeOfChange)
+		public IMemento getMemento(Vertex changedObject)
 		{
 			throw new NotImplementedException();
 		}
@@ -114,7 +114,7 @@ namespace GTEditor.SelectorG
 		}
 
 
-		public IMemento getMemento(IEdge changedObject, ChangeType typeOfChange)
+		public IMemento getMemento(IEdge changedObject)
 		{
 			throw new NotImplementedException();
 		}

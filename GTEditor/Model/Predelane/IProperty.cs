@@ -9,6 +9,94 @@ using GTEditor.Model.DesignPatterns.CommandAndMemento;
 
 namespace GTEditor.PropertyG
 {
+
+
+	public interface DProperty<V>
+	{
+		string getValue(V target);
+		void setValue(V target, string value);
+	}
+
+
+
+	public interface EProperty<V, T>: DProperty<V>
+	{
+		/// <summary>
+		/// Get value for specified edge.
+		/// </summary>
+		/// <param name="e">Target edge</param>
+		/// <returns>Value</returns>
+		T getValue(V e);
+
+		/// <summary>
+		/// Set value for specified edge.
+		/// </summary>
+		/// <param name="e">Targe edge</param>
+		/// <param name="value">Value for this edge</param>
+		void setValue(V e, T value);
+	}
+
+
+	class blah
+	{
+		List<DProperty<Vertex>> v = new List<DProperty<Vertex>>();
+
+		void ahoj()
+		{
+			
+
+
+			foreach (var item in v)
+			{
+						
+			} 
+		}
+	}
+
+	interface Convertor<T>
+	{
+		T convertFromString(string s);
+		string convertToString(T value);
+	}
+
+
+	class cucik<V, T> : EProperty<V, T>
+	{
+		Dictionary<V, T> klice = new Dictionary<V, T>();
+		Convertor<T> _convert;
+
+		public cucik(Convertor<T> conver)
+		{
+			_convert = conver;
+		}
+
+
+		public T getValue(V e)
+		{
+			return klice[e];
+		}
+
+		public void setValue(V e, T value)
+		{
+			klice[e] = value;
+
+		}
+
+		string DProperty<V>.getValue(V target)
+		{
+
+			return _convert.convertToString(klice[target]);
+
+		}
+
+		public void setValue(V target, string value)
+		{
+			klice[target] = _convert.convertFromString(value);
+		}
+	}
+
+
+
     /// <summary>
     /// Generic interface for edge properties
     /// </summary>
@@ -16,6 +104,7 @@ namespace GTEditor.PropertyG
 	public interface IProperty<V,T> : IGraphObserver<V>  where V : GraphObject
     {
 
+	
 
         /// <summary>
         /// Get value for specified edge.
@@ -31,7 +120,7 @@ namespace GTEditor.PropertyG
         /// <param name="value">Value for this edge</param>
         void setValue(V e, T value);
 
-     
+		
      
 
     }
@@ -95,7 +184,7 @@ namespace GTEditor.PropertyG
 			throw new NotImplementedException();
 		}
 
-		public IMemento getMemento(V changedObject, ChangeType typeOfChange)
+		public IMemento getMemento(V changedObject)
 		{
 			throw new NotImplementedException();
 		}
@@ -135,17 +224,18 @@ namespace GTEditor.PropertyG
 			throw new NotImplementedException();
 		}
 
+
 		public void update(V changedObject, ChangeType typeOfChange)
 		{
 			throw new NotImplementedException();
 		}
 
-		public IMemento getMemento()
+		public IMemento getMemento(V changedObject)
 		{
 			throw new NotImplementedException();
 		}
 
-		public IMemento getMemento(V changedObject, ChangeType typeOfChange)
+		public IMemento getMemento()
 		{
 			throw new NotImplementedException();
 		}

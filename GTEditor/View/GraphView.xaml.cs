@@ -13,20 +13,18 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using GTEditor.ViewModel;
 
-namespace GTEditor.Model.View
+namespace GTEditor.View
 {
 	/// <summary>
-	/// Interaction logic for SelectPanel.xaml
+	/// Interaction logic for GraphView.xaml
 	/// </summary>
-	public partial class SelectPanel : UserControl
+	public partial class GraphView : UserControl
 	{
-		public SelectPanel()
+		public GraphView()
 		{
-			Graph gr = new OrientedGraph();
-			InitializeComponent();
-			SelectViewModel s = new SelectViewModel(gr);
 
-			this.DataContext = s;
+			this.DataContext = new GraphViewModel();
+			InitializeComponent();
 		}
 	}
 }

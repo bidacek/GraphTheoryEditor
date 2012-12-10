@@ -12,6 +12,7 @@ using System.Windows.Shapes;
 using System.Collections.Generic;
 using GTEditor.Model.DesignPatterns.CommandAndMemento;
 using System.Diagnostics;
+using GTEditor.Ladeni;
 
 
 
@@ -33,50 +34,21 @@ namespace GTEditor
         public MainWindow()
         {
 
-			Graph graph = new OrientedGraph();
 
-			
+			/*Parser p = new Parser();
 
+			p.ExecuteCommand("AddV 15 14");
+			p.ExecuteCommand("AddV 65 14");
+			p.ExecuteCommand("AddV 78 14");
 
+			p.ExecuteCommand("AddE 0  1");
 
+			this.DataContext = p;
 
-			Positions positions = new Positions(graph, 500, 500);
+			*/
+		
 
-
-			Invoker MyInvoker = new Invoker();
-
-			AddVertexCommand a = new AddVertexCommand(graph);
-
-			AddVertexCommand b = new AddVertexCommand(graph);
-
-			AddVertexCommand c = new AddVertexCommand(graph);
-
-
-			MyInvoker.ExecuteCommand(a);
-
-			Debug.WriteLine(graph.ToString());
-
-			MyInvoker.ExecuteCommand(b);
-
-			Debug.WriteLine(graph.ToString());
-
-			MyInvoker.ExecuteCommand(c);
-
-			Debug.WriteLine(graph.ToString());
-
-			
-
-
-
-
-			MyInvoker.UndoCommand();
-
-			MyInvoker.UndoCommand();
-
-			
-
-			Debug.WriteLine(graph.ToString());
-
+			InitializeComponent();
 
 		
 				

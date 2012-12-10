@@ -11,16 +11,14 @@ namespace GTEditor
     public class Vertex : GraphObject
     {
         private int id;
+		public static int counter = 0;
 
 
-        /// <summary>
-        /// Create vertex with specified id
-        /// </summary>
-        /// <param name="i">ID of this node</param>
-        public Vertex(int i)
-        {
-            id = i;
-        }
+		public Vertex()
+		{
+			id = counter++;
+		}
+       
 
         /// <summary>
         /// Overrided ToString method for easy debugging 

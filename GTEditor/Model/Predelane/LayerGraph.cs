@@ -250,7 +250,7 @@ namespace GTEditor.VisualG.LayerG
 
 
 
-		public IMemento getMemento(Vertex changedObject, ChangeType typeOfChange)
+		public IMemento getMemento(Vertex changedObject)
 		{
 			throw new NotImplementedException();
 		}
@@ -261,7 +261,7 @@ namespace GTEditor.VisualG.LayerG
 		}
 
 
-		public IMemento getMemento(IEdge changedObject, ChangeType typeOfChange)
+		public IMemento getMemento(IEdge changedObject)
 		{
 			throw new NotImplementedException();
 		}

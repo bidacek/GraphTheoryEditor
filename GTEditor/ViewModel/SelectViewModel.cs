@@ -5,6 +5,10 @@ using System.Text;
 using GTEditor.SelectorG;
 using System.ComponentModel;
 using System.Reflection;
+using System.Windows.Input;
+using System.Diagnostics;
+
+
 namespace GTEditor.ViewModel
 {
 	class SelectViewModel : INotifyPropertyChanged
@@ -25,40 +29,35 @@ namespace GTEditor.ViewModel
 			}
 		}
 
-
-		//TODO: Vyzkoumat jak by tohle melo proboha fungovat
-		/*
-		 * private void OnPropertyChanged<T>(System.Linq.Expressions.Expression<Func<TNotifiableObject, T>> property)
+		public ICommand deleteAll
 		{
-			var handler = PropertyChanged;
-			if (handler != null)
+			get
 			{
-				string propertyName = property == null ? null : Reflect<TNotifiableObject>.Infoof(property).Name;
-				handler(this, new PropertyChangedEventArgs(propertyName));
+				return new DeleteComm();
 			}
 		}
 
-		*/
-
-		private void RaiseEvent(string property)
+		class DeleteComm : ICommand 
 		{
 
-			if (PropertyChanged == null) return;
+		public bool  CanExecute(object parameter)
+		{
+			return true;
+		}
 
-			PropertyInfo[] propertyInfos;
+		public event EventHandler  CanExecuteChanged;
 
-			propertyInfos = typeof(SelectViewModel).GetProperties(BindingFlags.Public |BindingFlags.Static);
-
-			foreach (PropertyInfo propertyInfo in propertyInfos)
-			{
-				if (propertyInfo.Name == property)
-				{
-					PropertyChanged(this, new PropertyChangedEventArgs(property));
-				}
+		public void  Execute(object parameter)
+		{
+			
+			System.Environment.Exit(0);
+		}
 			}
 
-			throw new Exception("Blbý jméno property asi si refraktoroval");
-		}
+
+
+
+		
 
 		public event PropertyChangedEventHandler PropertyChanged;
 	}

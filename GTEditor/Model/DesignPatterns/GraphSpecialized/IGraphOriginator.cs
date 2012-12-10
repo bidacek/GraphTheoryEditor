@@ -10,7 +10,7 @@ namespace GTEditor.Model.DesignPatterns.GraphSpecialized
 {
 	public interface IGraphOriginator<T> : Originator where T : GraphObject
 	{
-		IMemento getMemento(T changedObject, ChangeType typeOfChange);
+		IMemento getMemento(T changedObject);
 	}
 
 

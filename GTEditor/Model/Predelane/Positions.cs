@@ -8,20 +8,25 @@ using GTEditor.Model.DesignPatterns.CommandAndMemento;
 
 namespace GTEditor.VisualG.PositionG
 {
+
+	//TODO: Zatím se to nemaže ale jenom nastaví na null
+
     /// <summary>
     /// public class, which holds positions of vertices. When position of point is changed, event must be raised.
     /// </summary>
     public class Positions : IGraphObserver<Vertex>
-    {
-        private Dictionary<Vertex, VPoint> vertices;
-        private Graph innerGraph;
-        private Random innerRandom;
-        private int innerHeight;
-        private int innerWidth;
+	{
 
-       
-    
-        /// <summary>
+		#region Private fields
+		private Dictionary<Vertex, VPoint> _vertices;
+        private Graph _graph;
+        private Random _random;
+        private int _height;
+        private int _width;
+		#endregion
+
+		#region Constructors
+		/// <summary>
         /// Create instance of this public class width specified random seed.
         /// </summary>
         /// <param name="gr">Target graph</param>
@@ -32,7 +37,7 @@ namespace GTEditor.VisualG.PositionG
             : this(gr,width,height)
         {
 
-            innerRandom = new Random(seed);
+            _random = new Random(seed);
 
         }
 
@@ -44,23 +49,26 @@ namespace GTEditor.VisualG.PositionG
         /// <param name="height">Height of canvas</param>
         public Positions(Graph gr, int width, int height)
         {
-            vertices = new Dictionary<Vertex, VPoint>();
-            innerGraph = gr;
-            innerHeight = height;
-            innerWidth = width;
-            innerRandom = new Random();
+            _vertices = new Dictionary<Vertex, VPoint>();
+            _graph = gr;
+            _height = height;
+            _width = width;
+            _random = new Random();
 
 			gr.attachObserver(this);
 
         }
+		#endregion
 
-        /// <summary>
+		#region Properties
+
+		/// <summary>
         /// Width of canvas
         /// </summary>
         public int Width
         {
-            get { return innerWidth; }
-            set { innerWidth = value; }
+            get { return _width; }
+            set { _width = value; }
         }
 
         /// <summary>
@@ -68,11 +76,15 @@ namespace GTEditor.VisualG.PositionG
         /// </summary>
         public int Height
         {
-            get { return innerHeight; }
-            set { innerHeight = value; }
+            get { return _height; }
+            set { _height = value; }
         }
 
-        public bool setPosition(Vertex v, Point p)
+
+		#endregion
+
+		#region Specific methods
+		public bool setPosition(Vertex v, Point p)
         {
            VPoint vp = new VPoint(p.X,p.Y);
         
@@ -89,7 +101,7 @@ namespace GTEditor.VisualG.PositionG
         public bool setPosition(Vertex v, VPoint p)
         {
             //Check whether the new point is equal to old point 
-            if (v == null  || !innerGraph.Vertices.Contains(v) || p == null) {return false; }
+            if (v == null  || !_graph.Vertices.Contains(v) || p == null) {return false; }
    
             VPoint point = new VPoint();
             bool okay = true;
@@ -97,18 +109,18 @@ namespace GTEditor.VisualG.PositionG
             if (p.X < 0) { point.X = 0; okay = false;}
             else
             {
-                if (p.X > innerWidth) { point.X = innerWidth; okay = false; }
+                if (p.X > _width) { point.X = _width; okay = false; }
                 else { point.X = p.X; }
             }
 
             if (p.Top < 0) { point.Y = 0; okay = false; }
             else
             {
-                if (p.Top > innerHeight) { point.Y = innerHeight; okay = false; }
+                if (p.Top > _height) { point.Y = _height; okay = false; }
                 else { point.Y = p.Y; }
             }
 
-            vertices[v] = point;
+            _vertices[v] = point;
 
          
 
@@ -126,7 +138,9 @@ namespace GTEditor.VisualG.PositionG
         {
             if (v == null) { return null; }
 
-            return vertices[v];
+            return _vertices[v];
+
+			
 
            
         }
@@ -135,11 +149,10 @@ namespace GTEditor.VisualG.PositionG
 
 
 
+		#endregion
 
 
-
-
-
+		#region Observer interface
 		public void update(Vertex changedObject, ChangeType typeOfChange)
 		{
 
@@ -147,18 +160,18 @@ namespace GTEditor.VisualG.PositionG
 			{
 				case ChangeType.Added:
 					{
-						int w = innerRandom.Next(innerWidth);
-						int h = innerRandom.Next(innerHeight);
+						int w = _random.Next(_width);
+						int h = _random.Next(_height);
 						VPoint v = new VPoint(w,h);
 
-						vertices.Add(changedObject, v);
+						_vertices[changedObject] = v;
 						break;
 					}
 
 				case ChangeType.Removed:
 					{
 						
-						vertices.Remove(changedObject);
+						_vertices.Remove(changedObject);
 						break;
 					}
 
@@ -166,34 +179,59 @@ namespace GTEditor.VisualG.PositionG
 
 		}
 
+		#endregion
+
+		#region Originator interface
+
 		public IMemento getMemento()
 		{
 			return new FullMemento(this);
 		}
 
-		public IMemento getMemento(Vertex changedObject, ChangeType typeOfChange)
+		public IMemento getMemento(Vertex changedObject)
 		{
-			throw new NotImplementedException();
+			return new PartialMemento(this, changedObject);
 		}
 
 
 		private class FullMemento : IMemento
 		{
-			Positions innerPos;
-			Dictionary<Vertex, VPoint> innerDict;
+			Positions _positions;
+			Dictionary<Vertex, VPoint> _vertices;
 
 			public FullMemento(Positions pos)
 			{
-				innerPos = pos;
-				innerDict = new Dictionary<Vertex, VPoint>(pos.vertices);
+				_positions = pos;
+				_vertices = new Dictionary<Vertex, VPoint>(pos._vertices);
 			}
 
+			public void Rollback()
+			{
+				_positions._vertices = _vertices;				
+			}
+		}
+
+		private class PartialMemento : IMemento
+		{
+			private Positions  _position;
+			private Vertex _vertex;
+			private VPoint _point;
+
+			public PartialMemento(Positions pos,Vertex v)
+			{
+				_position = pos;
+				_vertex = v;
+				_point = _position._vertices[v];
+
+			}
 
 
 			public void Rollback()
 			{
-				innerPos.vertices = innerDict;				
+				_position._vertices[_vertex] = _point;
 			}
 		}
+
+		#endregion
 	}
 }

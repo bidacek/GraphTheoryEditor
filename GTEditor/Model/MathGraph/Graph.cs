@@ -14,13 +14,33 @@ namespace GTEditor
 	/// </summary>
 	public abstract class Graph : IGraphSubject<IEdge>, IGraphSubject<Vertex>
 	{
-		
+
 		protected List<IEdge> innerEdges;
 		protected List<Vertex> innerVertices;
 		protected int counter;
 
 		protected List<IGraphObserver<Vertex>> innerVertObs = new List<IGraphObserver<Vertex>>();
 		protected List<IGraphObserver<IEdge>> innerEdgeObs = new List<IGraphObserver<IEdge>>();
+
+
+
+
+		//TODO: jenom pokus je tohle
+
+		public void getList(out List<IEdge> list) 
+		{
+					list = innerEdges;
+		}
+
+
+		public void getList(out List<Vertex> list)
+		{
+			list = innerVertices;
+		}
+
+
+
+
 
 		/// <summary>
 		/// Returns list of edges
@@ -48,7 +68,7 @@ namespace GTEditor
 		/// Add vertex to this graph
 		/// </summary>
 		/// <returns>Reference to the added vertex</returns>
-		public abstract Vertex addVertex();
+		public abstract Vertex addVertex(Vertex v);
 
 
 		/// <summary>
@@ -118,7 +138,6 @@ namespace GTEditor
 		}
 
 
-		
 
 
 
@@ -145,9 +164,10 @@ namespace GTEditor
 
 			}
 
+
 			public void Rollback()
 			{
-				
+
 				originator.counter = zalohacounter;
 				originator.innerEdges = zalohaEdges;
 				originator.innerVertices = zalohaVertices;
@@ -160,10 +180,45 @@ namespace GTEditor
 			}
 		}
 
+		private class PartialMemento<T> : IMemento where T: GraphObject
+		{
+			Graph innGraph;
+			T innObject;
+			List<T> innList;
+			
+
+			public PartialMemento(Graph gr, T obj, List<T> list)
+			{
+
+				innGraph = gr;
+				innObject = obj;
+				innList = list;
+
+						
+				
+			}
+
+			public void Rollback()
+			{
+				if (innList.Contains(innObject))
+				{
+					innList.Remove(innObject);
+
+				}
+				else
+				{
+					innList.Add(innObject);
+				}
+			}
+
+
+		}
 
 
 
 
+
+	
 
 
 		public IMemento getMemento()
@@ -172,14 +227,14 @@ namespace GTEditor
 
 			foreach (var eObs in innerEdgeObs)
 			{
-				
+
 				m.Add(eObs.getMemento());
 			}
 
 			foreach (var vObs in innerVertObs)
 			{
 				m.Add(vObs.getMemento());
-					
+
 			}
 
 			return new FullMemento(this, m);
@@ -191,18 +246,18 @@ namespace GTEditor
 
 
 
-		public IMemento getMemento(IEdge changedObject, ChangeType typeOfChange)
+		public IMemento getMemento(IEdge changedObject)
 		{
-			throw new NotImplementedException();
+			return new PartialMemento<IEdge>(this, changedObject, innerEdges);
 		}
 
-		public IMemento getMemento(Vertex changedObject, ChangeType typeOfChange)
+		public IMemento getMemento(Vertex changedObject)
 		{
-			throw new NotImplementedException();
+			return new PartialMemento<Vertex>(this, changedObject, innerVertices);
 		}
 	}
 
-	
+
 
 
 }
